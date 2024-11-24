@@ -88,25 +88,32 @@
       {
         video: "https://video.wixstatic.com/video/5ea916_80204d373f74452bba1c2af243c828d4/1080p/mp4/file.mp4",
         compliment: "May all your wishes come true. Yours, Mom & Dad."
-      }
+      },
       {
         video: "https://video.wixstatic.com/video/5ea916_92b26f150e3b4ebeb4da0b57b09f833a/1080p/mp4/file.mp4",
         compliment: "Enjoy the little things. Yours, Mom & Dad."
-      }
+      },
       {
         video: "https://video.wixstatic.com/video/5ea916_2e9a4840556740228f92cafbd19e645f/1080p/mp4/file.mp4",
         compliment: "This wish is just for you. Yours, Saba Gabi."
       }
     ];
 
+    // Standalone compliments (not paired with images or videos)
+    const standaloneCompliments = [
+      "You are the light of our lives. Yours, Mom & Dad.",
+      "Your kindness inspires everyone around you. Yours, Adi.",
+      "You have a heart of gold. Yours, Saba Gabi."
+    ];
+
     document.getElementById('generate-btn').addEventListener('click', function () {
-      const randomType = Math.floor(Math.random() * 3); // Randomly pick content type (0: text, 1: image, 2: video)
+      const randomType = Math.floor(Math.random() * 3); // Randomly pick content type (0: standalone compliment, 1: image, 2: video)
       const contentDisplay = document.getElementById('content-display');
 
       if (randomType === 0) {
-        // Show a random compliment
-        const randomCompliment = imagesWithCompliments[Math.floor(Math.random() * imagesWithCompliments.length)].compliment;
-        contentDisplay.innerHTML = `<div>${randomCompliment}</div>`;
+        // Show a standalone compliment
+        const randomIndex = Math.floor(Math.random() * standaloneCompliments.length);
+        contentDisplay.innerHTML = `<div>${standaloneCompliments[randomIndex]}</div>`;
       } else if (randomType === 1) {
         // Show a random image with its specific compliment
         const randomIndex = Math.floor(Math.random() * imagesWithCompliments.length);
