@@ -71,7 +71,22 @@
   <div class="content" id="content-display">Click the button to see something special!</div>
 
   <script>
-    // Pair each image with a specific compliment
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    // Compliments, Images, and Videos Data
+    const standaloneCompliments = [
+      "You are the light of our lives. Yours, Mom & Dad.",
+      "Your kindness inspires everyone around you. Yours, Adi.",
+      "יכולת ההבנה שלך כלפי אחרים היא מתנה שאין להרבה אנשים. זה משהו שמלווה אותך בכל מה שאת עושה – וזה מדהים.",
+      "You have a heart of gold. Yours, Saba Gabi."
+    ];
+
     const imagesWithCompliments = [
       {
         image: "https://static.wixstatic.com/media/5ea916_817e7e419fdc4980b069702261482f42~mv2.jpg",
@@ -83,7 +98,6 @@
       }
     ];
 
-    // Pair each video with a specific compliment
     const videosWithCompliments = [
       {
         video: "https://video.wixstatic.com/video/5ea916_80204d373f74452bba1c2af243c828d4/1080p/mp4/file.mp4",
@@ -119,7 +133,7 @@
       },
       {
         video: "https://www.youtube.com/embed/Tuw8hxrFBH8?rel=0&ab_channel=MotivationArk",
-        compliment: "This is an important speach from Apple founder (Steve Jobs)"
+        compliment: "This is an important speech from Apple founder (Steve Jobs)"
       },
       {
         video: "https://video.wixstatic.com/video/5ea916_2e9a4840556740228f92cafbd19e645f/1080p/mp4/file.mp4",
@@ -127,13 +141,10 @@
       }
     ];
 
-    // Standalone compliments (not paired with images or videos)
-    const standaloneCompliments = [
-      "You are the light of our lives. Yours, Mom & Dad.",
-      "Your kindness inspires everyone around you. Yours, Adi.",
-      "יכולת ההבנה שלך כלפי אחרים היא מתנה שאין להרבה אנשים. זה משהו שמלווה אותך בכל מה שאת עושה – וזה מדהים.",
-      "You have a heart of gold. Yours, Saba Gabi."
-    ];
+    // Initialize queues for each type of content
+    let standaloneQueue = shuffleArray([...standaloneCompliments]);
+    let imagesQueue = shuffleArray([...imagesWithCompliments]);
+    let videosQueue = shuffleArray([...videosWithCompliments]);
 
     document.getElementById('generate-btn').addEventListener('click', function () {
       const randomType = Math.floor(Math.random() * 3); // Randomly pick content type (0: standalone compliment, 1: image, 2: video)
@@ -141,20 +152,21 @@
 
       if (randomType === 0) {
         // Show a standalone compliment
-        const randomIndex = Math.floor(Math.random() * standaloneCompliments.length);
-        contentDisplay.innerHTML = `<div>${standaloneCompliments[randomIndex]}</div>`;
+        if (standaloneQueue.length === 0) standaloneQueue = shuffleArray([...standaloneCompliments]);
+        const compliment = standaloneQueue.pop();
+        contentDisplay.innerHTML = `<div>${compliment}</div>`;
       } else if (randomType === 1) {
         // Show a random image with its specific compliment
-        const randomIndex = Math.floor(Math.random() * imagesWithCompliments.length);
-        const selectedImage = imagesWithCompliments[randomIndex];
+        if (imagesQueue.length === 0) imagesQueue = shuffleArray([...imagesWithCompliments]);
+        const selectedImage = imagesQueue.pop();
         contentDisplay.innerHTML = `
           <img src="${selectedImage.image}" alt="Surprise Image">
           <div class="compliment">${selectedImage.compliment}</div>
         `;
       } else if (randomType === 2) {
         // Show a random video with its specific compliment
-        const randomIndex = Math.floor(Math.random() * videosWithCompliments.length);
-        const selectedVideo = videosWithCompliments[randomIndex];
+        if (videosQueue.length === 0) videosQueue = shuffleArray([...videosWithCompliments]);
+        const selectedVideo = videosQueue.pop();
         contentDisplay.innerHTML = `
           <iframe width="560" height="315" src="${selectedVideo.video}" 
             frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
