@@ -11,13 +11,14 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 100vh;
+      min-height: 100vh;
       margin: 0;
       padding: 20px;
       background-image: url('https://static.wixstatic.com/media/5ea916_1b16aa34b66f43d5bc39d2407eedcd44~mv2.jpg');
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
+      overflow-y: auto; /* Enable scrolling */
     }
 
     h1 {
@@ -80,11 +81,11 @@
     }
 
     // Compliments, Images, and Videos Data
-    const standaloneCompliments = [
-      "You are the light of our lives. Yours, Mom & Dad.",
-      "Your kindness inspires everyone around you. Yours, Adi.",
+     const standaloneCompliments = [
+      "אוריקו, את ילדה מיוחדת. אנחנו אוהבים את טוב הלב שלך, הרגישות והחכמה שלך. תאמיני בעצמך ותני לעוצמות שלך להתפרץ. אבא ואמא",
+      "איזה כיף שיש לי אחות כמו אור! אמרו ביחד עדי וענר:).",
       "יכולת ההבנה שלך כלפי אחרים היא מתנה שאין להרבה אנשים. זה משהו שמלווה אותך בכל מה שאת עושה – וזה מדהים.",
-      "You have a heart of gold. Yours, Saba Gabi."
+      "יש לך לב זהב, כיף לי שארחת אותי באהבה גדולה בכל פעם שבאתי לבקר."
     ];
 
     const imagesWithCompliments = [
@@ -105,7 +106,7 @@
         compliment: "איזה קטע את כבר בת 12, איזה כיף שאנחנו כל כך קרובות"
       },
       {
-        image: "https://static.wixstatic.com/media/5ea916_18ef35bf85124d17b0d7a831847e0fbf~mv2.jpeg",
+        image: "https://static.wixstatic.com/media/5ea916_0f27dbc7b93f40ddae8c189dc64d689c~mv2.jpg",
         compliment: "אורקה אהובה, איזה כיף לעשות איתך שטויות"
       },
       {
@@ -129,7 +130,7 @@
     const videosWithCompliments = [
       {
         video: "https://video.wixstatic.com/video/5ea916_80204d373f74452bba1c2af243c828d4/1080p/mp4/file.mp4",
-        compliment: "May all your wishes come true. Yours, Mom & Dad."
+        compliment: "מאחלים לך שכל משאלותייך יתגשמו, אמא ואבא."
       },
       {
         video: "https://video.wixstatic.com/video/5ea916_92b26f150e3b4ebeb4da0b57b09f833a/1080p/mp4/file.mp4",
@@ -137,7 +138,7 @@
       },
       {
         video: "https://5ea91690-9ec5-43b3-b6ad-1b887ee47300.usrfiles.com/ugd/5ea916_1872d6851f3c4c01ac707f0db31cc10c.pdf",
-        compliment: "From Michal, Asaf, Liam, Amit and Leo :)."
+        compliment: "אוהבים אותך מאילת עד לקנדה ובחזרה! מיכל, אסף, ליאם, עמית וליאו."
       },
       {
         video: "https://video.wixstatic.com/video/5ea916_cda129494064446188884874c928a30c/480p/mp4/file.mp4",
@@ -168,33 +169,31 @@
         compliment: "This wish is just for you. Yours, Saba Gabi."
       }
     ];
-
     // Initialize queues for each type of content
     let standaloneQueue = shuffleArray([...standaloneCompliments]);
     let imagesQueue = shuffleArray([...imagesWithCompliments]);
     let videosQueue = shuffleArray([...videosWithCompliments]);
+
+    function getNextItem(queue, originalArray) {
+      if (queue.length === 0) queue.push(...shuffleArray([...originalArray]));
+      return queue.pop();
+    }
 
     document.getElementById('generate-btn').addEventListener('click', function () {
       const randomType = Math.floor(Math.random() * 3); // Randomly pick content type (0: standalone compliment, 1: image, 2: video)
       const contentDisplay = document.getElementById('content-display');
 
       if (randomType === 0) {
-        // Show a standalone compliment
-        if (standaloneQueue.length === 0) standaloneQueue = shuffleArray([...standaloneCompliments]);
-        const compliment = standaloneQueue.pop();
+        const compliment = getNextItem(standaloneQueue, standaloneCompliments);
         contentDisplay.innerHTML = `<div>${compliment}</div>`;
       } else if (randomType === 1) {
-        // Show a random image with its specific compliment
-        if (imagesQueue.length === 0) imagesQueue = shuffleArray([...imagesWithCompliments]);
-        const selectedImage = imagesQueue.pop();
+        const selectedImage = getNextItem(imagesQueue, imagesWithCompliments);
         contentDisplay.innerHTML = `
           <img src="${selectedImage.image}" alt="Surprise Image">
           <div class="compliment">${selectedImage.compliment}</div>
         `;
       } else if (randomType === 2) {
-        // Show a random video with its specific compliment
-        if (videosQueue.length === 0) videosQueue = shuffleArray([...videosWithCompliments]);
-        const selectedVideo = videosQueue.pop();
+        const selectedVideo = getNextItem(videosQueue, videosWithCompliments);
         contentDisplay.innerHTML = `
           <iframe width="560" height="315" src="${selectedVideo.video}" 
             frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
